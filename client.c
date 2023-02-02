@@ -188,7 +188,7 @@ void *wait_for_packet(void *thread_argument) {
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    puts("Usage: ./ping2 [\033[32;1mMAC_ADDRESS\033[0m] (Optional: [\033[32;1mINTERFACE\033[0m]) ()\n- Default Interface:\t\"eth0\"");
+    puts("Usage: ./ping2 [\033[32;1mMAC_ADDRESS\033[0m]");
     exit(1);
   }
   int i;
