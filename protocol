@@ -1,0 +1,60 @@
+  Protocol layout for the "Hardware Ethernet Location Protocol (HELP)"
+
+  + -------------- + ---------- + --------- + ---------- + -------------- +
+  | Ethernet Frame | Network ID | HELP Type | Package ID | Ethernet Frame |
+  + -------------- + ---------- + --------- + ---------- + -------------- +
+
+  The following terms are used in this document:
+  + --------- + ------------------------------------------------- +
+  | Term used | Meaning                                           |
+  + --------- + ------------------------------------------------- +
+  | Host      | A network device                                  |
+  | Client    | The program responsible for sending data          |
+  | Server    | The program responsible for replying to requests  |
+  + --------- + ------------------------------------------------- +
+
+          Request
+  Client  -->          Host (with MAC Address)
+  Client          <--  Host
+                Reply
+
+The HELP Protocol serves to detect hardware addresses (MAC Addresses) inside a network. It is also capable of separating the devices into virtual networks, just like a VLAN ID does.
+
+  HELP Types:
+
+    0x0 - HELP request
+    0x1 - HELP reply
+    0x2 - Broadcast request
+    0x3 - Broadcast reply
+
+    other Codes are pending for future use
+
+  The client sending a request adds 0x0 to the package, expecting a reply with the code 0x1 and the same package ID. To save resources, the Package ID will not be encrypted, though this can lead to false answers by a malicious host.
+  The worst case would be, a malicious host would answer stray requests from a client to fake the network presence of the requested host. This sort of attack can only be mitigated by the use of a different subnet.
+
+  After a package has been sent, the client starts a two-second timer. If a package is not returned within that time, the requested host appears down.
+
+  If the destination mac in the ethernet frame is the broadcast mac, type 0x2 has to be used. With this kind of package, instead of answering the question "is this host listening?", the question "who is listening?" gets answered.
+  All hosts with an active server will answer with the 0x3 message and are available to display. This type of behavior can easily flood the network, so it can be disabled by a firewall or any other ethernet routing device such as a switch or router if not desired. Broadcast requests containing a different number than 0x2 will be ignored. Broadcast answers can also be disabled per-server.
+
+  HELP Package ID:
+  The package ID denotes the package correlation if the user desires to send packages asynchronously (sending before/while caching). This is also helpful in less stable networks, where some answers could appear in random order.
+
+  HELP Network ID:
+  To separate clients virtually, a network ID is used. A client starts with the default configuration of network address 0. If a client requests a host, present in the network, but with a different network ID, it will be ignored by the host; the package will be dropped silently. However, a client with a configured network ID can still request clients with the network ID 0.
+
+  The network ID will be sent in plain text. This exposes their network IDs and makes them vulnerable to DOS attacks. It can only be mitigated by using VLANs or physical subnets. A network ID can be either used:
+    
+    > in passive mode - The client waits for requests. A possible malicious host in the same subnet/VLAN can only guess the ID by observing behavior of the network card.
+    > in active mode - The client actively puts out requests. Each device is able to force a specific network ID, a malicious host in the same subnet/VLAN could therefore only guess the network ID being used.
+  
+  Either way, network IDs do not provide security against DOS Attacks. They only serve as a means to group devices into virtual groups. They can also be used to create vendor specific network IDs or to be used as an attempt to increase privacy in public networks with short temporal presence.
+
+
+HELP Protocol size in octets:
+
++ ---------- + --------- + ---------- +
+| Network ID | HELP Type | Package ID |
++ ---------- + --------- + ---------- +
+| 4 octets    | 1 octet  | 2 octets   |
++ ---------- + --------- + ---------- +
