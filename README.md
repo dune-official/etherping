@@ -1,5 +1,5 @@
 # etherping
-A ping client and server implemented in layer 2 using its own protocol ("Hardware Ethernet Location Protocol")
+A ping client and server for layer 2, implemented in C, using its own protocol ("Hardware Ethernet Location Protocol"). You can (and probably should) use it to test layer 2 routes in your network.
 
 # Install
 
