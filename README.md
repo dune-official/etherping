@@ -5,6 +5,8 @@ For protocoll reference, please refer to the included text file in the repositor
 
 # Install
 
+It suffices to use the standard packages of a modern linux system. I tested this with a Rocky Linux 8 machine, but any linux kernel above version 6 should do.
+
 client: `gcc client.c -o client -O1 -pthread`
 
 server: `gcc server.c -o server -O1`
