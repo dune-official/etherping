@@ -10,3 +10,7 @@ It suffices to use the standard packages of a modern linux system. I tested this
 client: `gcc client.c -o client -O1 -pthread`
 
 server: `gcc server.c -o server -O1`
+
+# Feedback
+
+Please leave me feedback or suggestions in the issues section or as a direct message, I'll appreciate it.
