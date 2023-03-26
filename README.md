@@ -13,4 +13,4 @@ server: `gcc server.c -o server -O1`
 
 # Feedback
 
-Please leave me feedback or suggestions in the issues section or as a direct message, I'll appreciate it.
+Please leave me feedback or suggestions in the issues section or as a direct message, I appreciate it.
