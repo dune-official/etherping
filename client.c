@@ -204,7 +204,6 @@ void *wait_for_packet(void *thread_argument) {
     fputs("\t[\033[31mERROR\033[0m] Failed to reach host ", stderr);print_mac(mac_address, stderr);fputs(" (Timeout), please check your ethernet configuration\n", stderr);
   }
   exit(0);
-  pthread_exit(0);
 }
 
 
