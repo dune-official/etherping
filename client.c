@@ -35,6 +35,8 @@ void *wait_for_packet(void *thread_argument);
 
 /*************************************** Befinning of file ********************************/
 
+#define CHALLOC(x) if (NULL == (x)) {fputs("Failed to init #x \n", stderr);exit(1);}
+
 typedef struct EtherPing {
   char network_id[NETW_ID_LEN];
   char mode;
