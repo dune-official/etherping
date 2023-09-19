@@ -196,10 +196,8 @@ void send_packet(const int socket_fd, const unsigned char *packet, const unsigne
 void *wait_for_packet(void *thread_argument) {
   /* this function waits three seconds, prints out that the host is unavailable and quits the program */
   unsigned char *mac_address = (unsigned char *) calloc(6, sizeof(*mac_address));
-  if (NULL == mac_address) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize hardware address display buffer\n", stderr);
-    exit(1);
-  }
+  CHALLOC(mac_address)
+  
   memcpy(mac_address, (char *) thread_argument, 6);
   sleep(1);
   if (memcmp(mac_address, "\xff\xff\xff\xff\xff\xff", 6)) {
