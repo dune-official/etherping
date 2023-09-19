@@ -35,7 +35,7 @@ void *wait_for_packet(void *thread_argument);
 
 /*************************************** Befinning of file ********************************/
 
-#define CHALLOC(x) if (NULL == (x)) {fputs("Failed to init #x \n", stderr);exit(1);}
+#define CHALLOC(x) if (NULL == (x)) {fputs("\t[\033[31mERROR\033[0m] Failed to allocate "#x"\n", stderr);exit(1);}
 
 typedef struct EtherPing {
   char network_id[NETW_ID_LEN];
@@ -219,23 +219,13 @@ int main(int argc, char *argv[]) {
   pthread_t pkt_timeout;
 
   unsigned char *destination_mac = (unsigned char *) calloc(6, sizeof(*destination_mac));
-  if (NULL == destination_mac) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize hardware address register\n", stderr);
-    exit(1);
-  }
+  CHALLOC(destination_mac)
 
   char *interface_name = (char *) calloc(IFNAMSIZ, sizeof(*interface_name));
-  if (NULL == interface_name) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize interface name register\n", stderr);
-    exit(1);
-  }
-
+  CHALLOC(interface_name)
 
   unsigned char *read_buffer = (unsigned char *) calloc(64, sizeof(*read_buffer));
-  if (NULL == read_buffer) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize receiving register\n", stderr);
-    exit(1);
-  }
+  CHALLOC(read_buffer)
 
   int socket_fd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
   if (socket_fd < 0) {
@@ -244,22 +234,13 @@ int main(int argc, char *argv[]) {
   }
 
   char *network_id = (char *) calloc(NETW_ID_LEN, sizeof(*network_id));
-  if (NULL == network_id) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize network ID register\n", stderr);
-    exit(1);
-  }
+  CHALLOC(network_id)
  
   unsigned char *mode = (unsigned char *) calloc(1, sizeof(*mode));
-  if (NULL == mode) {
-    fputs("[\033[31mERROR\033[0m] Failed to initialize mode register\n", stderr);
-    exit(1);
-  }
+  CHALLOC(mode)
 
   char *packet_id = (char *) calloc(PKT_ID_LEN, sizeof(*packet_id));
-  if (NULL == packet_id) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize packet ID register\n", stderr);
-    exit(1);
-  }
+  CHALLOC(packet_id)
 
   struct ifreq interface_ID, interface_MAC;
   
@@ -281,10 +262,7 @@ int main(int argc, char *argv[]) {
   
   struct ether_header *rec_eh = (struct ether_header *) read_buffer;
   unsigned char *packet_sender = (unsigned char *) calloc(6, sizeof(*packet_sender));
-  if (NULL == packet_sender) {
-    fputs("\t[\033[31mERROR\033[0m] Failed to initialize packet author object\n", stderr);
-    exit(1);
-  }
+  CHALLOC(packet_sender)
  
   unsigned char *transmission_packet = create_packet(destination_mac, interface_MAC, network_id, mode, packet_id);
   send_packet(socket_fd, transmission_packet, destination_mac, interface_ID);
